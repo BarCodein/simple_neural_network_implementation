@@ -1,6 +1,6 @@
 import numpy as np
 from layer import layer,input_layer,hidden_layer,output_layer
-
+from fuc import Relu as a,de_Relu as b
 class net:
     def __init__(self,nodes_num,fucs,back_fucs,learn_rate):
         assert(isinstance(nodes_num,list))
@@ -49,13 +49,13 @@ def b(error,value):
     return t*error
 
 if __name__ == "__main__":
-    n = net([10,5,6,3,4]
-            ,[a,a,a,a],[b,b,b,b],0.01)
+    n = net([10,5,3,4]
+            ,[a,a,a],[b,b,b],0.01)
     #n.layers[1].load_weight(np.random.rand(5,10))
     inp = np.ones((10,1))
     n.for_prop(inp)
     n.print_output()
-    oup = np.array([[1],[0],[2],[1]]) 
+    oup = np.array([[1],[0],[10],[2]]) 
     n.back_prop(oup)
 
     for i in range(1500):
