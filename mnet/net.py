@@ -1,18 +1,17 @@
 import numpy as np
 from layer import layer,input_layer,hidden_layer,output_layer
-from fuc import (Relu as a,de_Relu as b,sigmod,de_sigmod,
+from fuc import (Relu,de_Relu,sigmod,de_sigmod,
     liner,de_liner)
 class net:
-    def __init__(self,nodes_num,fucs,back_fucs,learn_rate):
+    def __init__(self,nodes_num,fucs,learn_rate):
         assert(isinstance(nodes_num,list))
         assert(isinstance(fucs,list))
         assert(len(nodes_num)==len(fucs)+1)
-        assert(len(nodes_num)==len(back_fucs)+1)
         self.layers = []
         self.layers.append(input_layer(nodes_num[0]))
         for i in range(1,len(nodes_num)):
             self.layers.append(hidden_layer(nodes_num[i]
-                ,self.layers[-1],fucs[i-1],back_fucs[i-1]))
+                ,self.layers[-1],fucs[i-1]))
         self.layers.append(output_layer(self.layers[-1],learn_rate))
     
     def load_weight(self,filename):
@@ -32,6 +31,7 @@ class net:
         self.layers[0].get_input(inp)
         for i in range(1,len(self.layers)):
             self.layers[i].for_prop()
+        return self.get_output()
 
     def back_prop(self,correct_output):
         err = self.layers[-1].back_prop(correct_output)
@@ -43,6 +43,10 @@ class net:
         self.for_prop(inp)
         return self.back_prop(correct_output)
 
+    def test(self,inp,correct_output):
+        self.for_prop(inp)
+        return self.layers[-1].back_prop(correct_output)
+
     def get_output(self):
         return self.layers[-1].output
 
@@ -51,13 +55,13 @@ class net:
     
 
 if __name__ == "__main__":
-    n = net([10,5,3,4]
-            ,[a,a,sigmod],[b,b,de_sigmod],0.01)
+    n = net([4,5,4]
+            ,[Relu,sigmod],0.1)
     #n.layers[1].load_weight(np.random.rand(5,10))
-    inp = np.ones((10,1))
+    inp = np.array([[10],[2],[3],[-1]])
     n.for_prop(inp)
     n.print_output()
-    oup = np.array([[1],[0],[-1],[0]]) 
+    oup = np.array([[1],[0],[1],[0]]) 
     n.back_prop(oup)
 
     for i in range(1500):

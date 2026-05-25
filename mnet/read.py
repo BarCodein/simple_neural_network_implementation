@@ -45,10 +45,10 @@ def preprocess(df):
     return df
 
 
-def read_from_csv():
+def read_from_csv(filename):
 
 
-    train_df = pd.read_csv("../data/titanic/train.csv")
+    train_df = pd.read_csv("../data/titanic/"+filename)
     print(train_df.head(10))
 
     pre_df = preprocess(train_df)

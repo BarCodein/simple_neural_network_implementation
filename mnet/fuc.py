@@ -1,4 +1,6 @@
 import numpy as np
+
+
 def Relu(x):
     return np.where(x>0,x,0)
 
@@ -10,10 +12,13 @@ def sigmod(x):
     return 1/(1+ np.exp(-x))
 
 def de_sigmod(x):
-    return x * (1 - x)
+    return sigmod(x) * (1 - sigmod(x))
 
 def liner(x):
     return x
 
 def de_liner(x):
     return x/x
+
+
+pairs = {Relu:de_Relu,sigmod:de_sigmod,liner:de_liner}

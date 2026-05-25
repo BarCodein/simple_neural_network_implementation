@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from fuc import pairs
 
 class layer:
     def __init__(self,num_output):
@@ -15,13 +16,13 @@ class input_layer(layer):
         self.output = input_data + 0
 
 class hidden_layer(layer):
-    def __init__(self, num_output,last_layer,fuc,back_fuc):
+    def __init__(self, num_output,last_layer,fuc):
         super().__init__(num_output)
         assert(isinstance(last_layer,layer))
         self.last_layer = last_layer #indicate input layer
         self.last_layer.next_layer = self
         self.fuc = fuc
-        self.back_fuc = back_fuc
+        self.back_fuc = pairs[fuc]
         self.stage = np.zeros((num_output,1))
         self.weight = np.random.rand(self.num_output,
                                      self.last_layer.num_output) /10

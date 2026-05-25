@@ -12,6 +12,11 @@ class layer{
 class net{
     layers
     train
+    test
     output
 }
-
+fuctions{
+    liner
+    Relu
+    sigmod
+}
