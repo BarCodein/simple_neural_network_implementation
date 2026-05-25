@@ -1,6 +1,7 @@
 import numpy as np
 from layer import layer,input_layer,hidden_layer,output_layer
-from fuc import Relu as a,de_Relu as b
+from fuc import (Relu as a,de_Relu as b,sigmod,de_sigmod,
+    liner,de_liner)
 class net:
     def __init__(self,nodes_num,fucs,back_fucs,learn_rate):
         assert(isinstance(nodes_num,list))
@@ -33,38 +34,36 @@ class net:
             self.layers[i].for_prop()
 
     def back_prop(self,correct_output):
-        self.layers[-1].back_prop(correct_output)
+        err = self.layers[-1].back_prop(correct_output)
         for i in range(len(self.layers)-2,0,-1):
             self.layers[i].back_prop()
+        return err
+    
+    def train(self,inp,correct_output):
+        self.for_prop(inp)
+        return self.back_prop(correct_output)
 
+    def get_output(self):
+        return self.layers[-1].output
 
     def print_output(self):
-        print(self.layers[-1].output)
-
-def a(x):
-    return np.where(x>0,x,0)
-
-def b(error,value):
-    t =  np.where(value>0,1,0)
-    return t*error
+        print(self.get_output())
+    
 
 if __name__ == "__main__":
     n = net([10,5,3,4]
-            ,[a,a,a],[b,b,b],0.01)
+            ,[a,a,sigmod],[b,b,de_sigmod],0.01)
     #n.layers[1].load_weight(np.random.rand(5,10))
     inp = np.ones((10,1))
     n.for_prop(inp)
     n.print_output()
-    oup = np.array([[1],[0],[10],[2]]) 
+    oup = np.array([[1],[0],[-1],[0]]) 
     n.back_prop(oup)
 
     for i in range(1500):
-        n.for_prop(inp)
+        err = n.train(inp,oup)
         if i%10==0:
             n.print_output()
-        n.back_prop(oup)
+            print('error',err)
     n.store_weight("w.npz")
     
-
-
-

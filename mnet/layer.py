@@ -42,8 +42,8 @@ class hidden_layer(layer):
         #print('for_prop')
 
     def back_prop(self):
-        stage_error = self.back_fuc(self.next_layer.back_error,
-                                    self.stage)
+        stage_error = (self.back_fuc(self.stage) 
+            * self.next_layer.back_error)
         self.back_error = self.weight.T @ stage_error
         self.weight = (self.weight + 
                        stage_error @ self.last_layer.output.T)
@@ -66,6 +66,7 @@ class output_layer(layer):
         assert(np.shape(correct_output)==np.shape(self.back_error))
         self.back_error = ((correct_output-self.output) * 
             self.learn_rate)
+        return correct_output-self.output
 
 
 
